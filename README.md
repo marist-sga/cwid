@@ -23,5 +23,5 @@ CWID.configure do |c|
   c.password = 'Murray'
 end
 
-CWID.lookup(20045405) # => { email: 'ethan.turkeltaub@gmail.com', ... }
+CWID.lookup(20045405) # => #<CWID::Person>
 ```
