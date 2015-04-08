@@ -29,14 +29,15 @@ describe CWID do
   describe '.lookup' do
     let(:lookup) do
       VCR.use_cassette 'cwid/lookup', match_requests_on: [:path] do
-        @look = CWID.lookup('20045405')
+        @look = CWID.lookup(cwid: '20045405')
       end
 
       @look
     end
 
-    it { expect(lookup).to be_an_instance_of CWID::Person }
-    it { expect(lookup.email).to eql 'Ethan.Turkeltaub1@marist.edu' }
+    it { expect(lookup).to be_an_instance_of Array }
+    it { expect(lookup.first).to be_an_instance_of CWID::Person }
+    it { expect(lookup.first.email).to eql 'Ethan.Turkeltaub1@marist.edu' }
   end
 
   describe '.connection' do

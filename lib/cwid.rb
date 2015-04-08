@@ -1,3 +1,5 @@
+require 'pp'
+
 require 'faraday'
 require 'faraday_middleware'
 require 'multi_xml'
@@ -10,26 +12,71 @@ module CWID
     attr_accessor :configuration
 
     def configure
+      # Create a new configuration and yield it to a block
       self.configuration ||= Configuration.new
+
       yield(configuration)
 
       return configuration
     end
 
-    def lookup(cwid)
-      req = self.connection.get do |r|
-        r.url self.configuration.search_path + format(cwid)
+    # Perform a lookup.
+    #
+    # @param [Hash] The search terms in a hash (`cwid: 20045405`, `name: "Douglas Adams"`).
+    # @return [Person] The person that belongs to that CWID.
+    def lookup(terms = {})
+      # Format the CWID if that's what we're getting.
+      if terms[:cwid]
+        terms = format(terms.values.first)
+      else
+        terms = terms.values.first
       end
 
-      if req.body['directory'].empty?
+      # Make the request to the LDAP server
+      req = self.connection.get do |r|
+        r.url self.configuration.search_path + terms
+      end
+
+      # Return nil if there aren't any results
+      if req.body['directory'] && req.body['directory'].empty?
         nil
+
+      # Otherwise, create a new Person out of it
       else
-        Person.new(req.body)
+        results = []
+
+        if req.body['directory']['person'].is_a?(Hash)
+          results << Person.new(req.body['directory']['person'])
+        else
+          req.body['directory']['person'].each do |r|
+            results << Person.new(r)
+          end
+        end
+
+        results
       end
     end
 
+    # Formats a CWID to remove special characters and extra numbers.
+    #
+    # @param [Integer, String] The CWID to be formatted
+    # @return [String] The formatted CWID
     def format(cwid)
-      cwid.to_s.split('-').join('')
+      # Convert the input to a string
+      cwid = cwid.to_s
+
+      # Remove anything other than the numbers
+      cwid = cwid.gsub(/[^0-9 ]/, '')
+
+      # Remove spaces
+      cwid = cwid.gsub(/\s+/, '')
+
+      # If it's more than 8 characters, it has the card code as well
+      if cwid.length > 8
+        cwid = cwid[0..7]
+      end
+
+      cwid
     end
 
     def connection

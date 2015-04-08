@@ -1,12 +1,10 @@
 module CWID
   class Person
-    attr_accessor :name, :surname, :phone, :mailbox, :email, :cwid, :type
+    attr_accessor :first_name, :last_name, :phone, :mailbox, :email, :cwid, :type
 
-    def initialize(hsh)
-      person = hsh['directory']['person']
-
-      @name = person['name'].split(' ').first
-      @surname = person['lastname']
+    def initialize(person)
+      @first_name = person['name'].split(' ').first
+      @last_name = person['lastname']
       @phone = person['phone']
       @mailbox = person['location']
       @email = person['email']
