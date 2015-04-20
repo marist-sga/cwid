@@ -86,5 +86,21 @@ module CWID
         f.basic_auth self.configuration.username, self.configuration.password
       end
     end
+
+    def connected?
+      result = true
+
+      begin
+        req = self.connection.get do |r|
+          r.url self.configuration.search_path
+          r.options.timeout = 2
+          r.options.open_timeout = 1
+        end
+      rescue Faraday::ConnectionFailed
+        result = false
+      end
+
+      result
+    end
   end
 end
