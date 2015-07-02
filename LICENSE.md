@@ -1,4 +1,4 @@
-Copyright (c) 2015 Ethan Turkeltaub
+Copyright (c) 2015 Marist College Student Government Association
 
 MIT License
 
