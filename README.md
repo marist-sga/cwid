@@ -1,13 +1,7 @@
+# cwid
 
-## Contributing
+A simple Gem for Marist Campus-Wide Identification lookup.
 
-1. Fork it (https://github.com/marist-sga/cwid/fork)
-2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
-5. Create a new Pull Request# CWID
-
-A simple Gem for requesting student and employee information from the LDAP server using Campus-Wide Identification (CWID) numbers.
 
 ## Installation
 
