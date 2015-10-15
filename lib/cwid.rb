@@ -39,9 +39,14 @@ module CWID
         r.url self.configuration.search_path + terms
       end
 
+      # Return nil if there's a nil directory return
+      if req.body['directory'].nil?
+        return nil
+      end
+
       # Return nil if there aren't any results
-      if req.body['directory'] && req.body['directory'].empty?
-        nil
+      if req.body['directory'] && (req.body['directory'].empty? || req.body['directory'].nil?)
+        return nil
 
       # Otherwise, create a new Person out of it
       else
@@ -55,7 +60,7 @@ module CWID
           end
         end
 
-        results
+        return results
       end
     end
 
