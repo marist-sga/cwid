@@ -60,6 +60,17 @@ describe CWID do
     it { expect(lookup).to be_an_instance_of Array }
     it { expect(lookup.first).to be_an_instance_of CWID::Person }
     it { expect(lookup.first.email).to eql 'Ethan.Turkeltaub1@marist.edu' }
+
+    context 'no results' do
+      let(:no_results) do
+        VCR.use_cassette 'cwid/lookup_empty', match_requests_on: [:path] do
+          CWID.lookup(cwid: '20045401')
+        end
+      end
+
+      it { expect(no_results).to be_an_instance_of Array }
+      it { expect(no_results).to be_empty }
+    end
   end
 
   describe '.connection' do

@@ -41,12 +41,12 @@ module CWID
 
       # Return nil if there's a nil directory return
       if req.body['directory'].nil?
-        return nil
+        return []
       end
 
       # Return nil if there aren't any results
       if req.body['directory'] && (req.body['directory'].empty? || req.body['directory'].nil?)
-        return nil
+        return []
 
       # Otherwise, create a new Person out of it
       else
